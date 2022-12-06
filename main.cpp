@@ -8,9 +8,11 @@
 
 
 std::string generate_uuid_v4();
-const std::string SERVER = ""; //Broker address
+const std::string SERVER = "hawk.rmq.cloudamqp.com"; //Broker address
 const std::string CLIENT_ID = generate_uuid_v4();
 const std::string TOPIC = "sensor data";
+const std::string PASSWORD = "hdj973ZX7qrwvZki6_gHAPbP6PZf5eQV";
+const std::string USERNAME = "desizaxr:desizaxr";
 const int QoS = 1;
 
 
@@ -76,18 +78,12 @@ void sensor_process(const std::string& name, const std::string& type, mqtt::clie
 		std::cerr<<"Sensor of non existing type";
 		exit(2);
 	}
-	try {
-		std::string payload = form_json(name, type, (*distribution)(gen));
-		auto pubmsg = mqtt::make_message(TOPIC, payload);
-		pubmsg->set_qos(QoS);
-		client.publish(pubmsg);
-		client.publish(pubmsg);
-		sleep(5);
-	}
-	catch (const mqtt::exception& e)
-	{
-		std::cerr<<e.what();
-	}
+	std::string payload = form_json(name, type, (*distribution)(gen));
+	auto pubmsg = mqtt::make_message(TOPIC, payload);
+	pubmsg->set_qos(QoS);
+	client.publish(pubmsg);
+	client.publish(pubmsg);
+	sleep(5);
 }
 
 int main(int argc, char* argv[])
@@ -100,17 +96,23 @@ int main(int argc, char* argv[])
 
 	std::string name(argv[1]);
 	std::string type(argv[2]);
+	try {
+		mqtt::client client(SERVER, CLIENT_ID);
+		mqtt::connect_options connOpts;
+		connOpts.set_keep_alive_interval(20);
+		connOpts.set_clean_session(true);
+		connOpts.set_password(PASSWORD);
+		connOpts.set_user_name(USERNAME);
 
-	mqtt::client client(SERVER, CLIENT_ID);
-	mqtt::connect_options connOpts;
-	connOpts.set_keep_alive_interval(20);
-	connOpts.set_clean_session(true);
+		client.connect(connOpts);
 
-	client.connect(connOpts);
-
-	while(client.is_connected())
+		while (client.is_connected()) {
+			sensor_process(name, type, client);
+		}
+	}
+	catch (const mqtt::exception& e)
 	{
-		sensor_process(name, type, client);
+		std::cerr<<e.what();
 	}
 
 	return 0;
