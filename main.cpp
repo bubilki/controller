@@ -2,6 +2,7 @@
 #include <random>
 #include <string>
 #include <sstream>
+#include <iomanip>
 #include <unistd.h>
 
 #include "mqtt/client.h"
@@ -10,15 +11,16 @@
 std::string generate_uuid_v4();
 const std::string SERVER = "hawk.rmq.cloudamqp.com"; //Broker address
 const std::string CLIENT_ID = generate_uuid_v4();
-const std::string TOPIC = "sensor data";
+const std::string TOPIC = "sensors_data";
 const std::string PASSWORD = "hdj973ZX7qrwvZki6_gHAPbP6PZf5eQV";
 const std::string USERNAME = "desizaxr:desizaxr";
 const int QoS = 1;
 
+std::random_device rd{};
+std::mt19937 gen{rd()};
+std::normal_distribution<float>* distribution;
 
 std::string generate_uuid_v4() {
-	std::random_device              rd;
-	std::mt19937                    gen(rd());
 	std::uniform_int_distribution<> dis(0, 15);
 	std::uniform_int_distribution<> dis2(8, 11);
 
@@ -57,10 +59,6 @@ std::string form_json(const std::string& name, const std::string& type, float va
 
 void sensor_process(const std::string& name, const std::string& type, mqtt::client& client)
 {
-	std::random_device rd{};
-	std::mt19937 gen{rd()};
-	std::normal_distribution<float>* distribution;
-
 	if(type == "smoke")
 	{
 		distribution = new std::normal_distribution<float>{0.5, 0.15};
@@ -82,7 +80,10 @@ void sensor_process(const std::string& name, const std::string& type, mqtt::clie
 	auto pubmsg = mqtt::make_message(TOPIC, payload);
 	pubmsg->set_qos(QoS);
 	client.publish(pubmsg);
-	client.publish(pubmsg);
+	auto t = std::time(nullptr);
+	auto tm = *std::localtime(&t);
+	std::cout << std::put_time(&tm, "%d-%m-%Y %H-%M-%S") << " sent to "<<SERVER<<std::endl;
+	std::cout<<pubmsg.get()->to_string()<<std::endl;
 	sleep(5);
 }
 
