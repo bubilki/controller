@@ -1,10 +1,11 @@
 cmake_minimum_required(VERSION 3.20)
 project(controller)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 14)
 
 if(UNIX)
 	message(STATUS ">>> Linux")
+	message("kuku ${PROJECT_SOURCE_DIR}")
 	include_directories(${PROJECT_SOURCE_DIR}/include_linux)
 	link_libraries(${PROJECT_SOURCE_DIR}/libs_static_linux/libpaho-mqtt3a.a
 		${PROJECT_SOURCE_DIR}/libs_static_linux/libpaho-mqtt3as.a
