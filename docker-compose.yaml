@@ -1,0 +1,5 @@
+air1_sensor:
+    build: .
+    environment:
+        - SENSOR_NAME=air1
+        - SENSOR_TYPE=oxygen

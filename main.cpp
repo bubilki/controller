@@ -23,29 +23,30 @@ std::normal_distribution<float>* distribution;
 std::string generate_uuid_v4() {
 	std::uniform_int_distribution<> dis(0, 15);
 	std::uniform_int_distribution<> dis2(8, 11);
+    std::default_random_engine generator( (unsigned int)time(0) );
 
 	std::stringstream ss;
 	int i;
 	ss << std::hex;
 	for (i = 0; i < 8; i++) {
-		ss << dis(gen);
+		ss << dis(generator);
 	}
 	ss << "-";
 	for (i = 0; i < 4; i++) {
-		ss << dis(gen);
+		ss << dis(generator);
 	}
 	ss << "-4";
 	for (i = 0; i < 3; i++) {
-		ss << dis(gen);
+		ss << dis(generator);
 	}
 	ss << "-";
 	ss << dis2(gen);
 	for (i = 0; i < 3; i++) {
-		ss << dis(gen);
+		ss << dis(generator);
 	}
 	ss << "-";
 	for (i = 0; i < 12; i++) {
-		ss << dis(gen);
+		ss << dis(generator);
 	};
 	return ss.str();
 }
@@ -98,6 +99,7 @@ int main(int argc, char* argv[])
 	std::string name(argv[1]);
 	std::string type(argv[2]);
 	try {
+        std::cout<<CLIENT_ID<<std::endl;
 		mqtt::client client(SERVER, CLIENT_ID);
 		mqtt::connect_options connOpts;
 		connOpts.set_keep_alive_interval(20);
