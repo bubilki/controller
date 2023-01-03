@@ -90,16 +90,25 @@ void sensor_process(const std::string& name, const std::string& type, mqtt::clie
 
 int main(int argc, char* argv[])
 {
-	if(argc != 3)
-	{
-		std::cerr << "Please pass the name and the type of the sensor in command line arguments";
-		exit(1);
-	}
+    std::string name = std::getenv("SENSOR_NAME") ? std::getenv("SENSOR_NAME") : "";
+    std::string type = std::getenv("SENSOR_TYPE") ? std::getenv("SENSOR_TYPE") : "";
 
-	std::string name(argv[1]);
-	std::string type(argv[2]);
+    if(name.empty() || type.empty())
+    {
+        if(argc != 3)
+        {
+            std::cerr << "Please pass the name and the type of the sensor in command line arguments";
+            exit(1);
+        }
+
+        name = argv[1];
+        type = argv[2];
+    }
+
 	try {
-        std::cout<<CLIENT_ID<<std::endl;
+        std::cout<<"sensor_name: "<<name<<std::endl;
+        std::cout<<"sensor_type: "<<type<<std::endl;
+        std::cout<<"uuid: "<<CLIENT_ID<<std::endl;
 		mqtt::client client(SERVER, CLIENT_ID);
 		mqtt::connect_options connOpts;
 		connOpts.set_keep_alive_interval(20);

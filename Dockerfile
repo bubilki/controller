@@ -27,7 +27,6 @@ RUN bash -xc " \
     ldconfig; \
     popd; \
     "
-RUN ls -R /usr/local
 
 FROM ubuntu AS build-src
 WORKDIR /usr/bin/controller
@@ -61,7 +60,7 @@ COPY --from=build-libs usr/local/lib/libpaho-mqtt3cs.a libs_static_linux/
 COPY --from=build-libs usr/local/lib/libpaho-mqttpp3.a libs_static_linux/
 
 COPY --from=build-libs usr/local/include include_linux
-RUN ls libs_static_linux
+
 #building sources
 RUN mkdir "build"
 RUN bash -xc "\
