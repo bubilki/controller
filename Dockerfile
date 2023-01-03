@@ -75,4 +75,4 @@ WORKDIR /
 COPY --from=build-src /usr/bin/controller/libs_shared_linux/* /
 COPY --from=build-src /usr/bin/controller/build/controller /
 
-CMD ["./controller", "sensor", "oxygen"]
+CMD ["./controller"]

@@ -1,5 +1,35 @@
 air1_sensor:
-    build: .
+    image: sensor
     environment:
         - SENSOR_NAME=air1
         - SENSOR_TYPE=oxygen
+
+air2_sensor:
+    image: sensor
+    environment:
+        - SENSOR_NAME=air2
+        - SENSOR_TYPE=oxygen
+
+temp1_sensor:
+    image: sensor
+    environment:
+        - SENSOR_NAME=temp1
+        - SENSOR_TYPE=temp
+
+temp2_sensor:
+    image: sensor
+    environment:
+        - SENSOR_NAME=temp2
+        - SENSOR_TYPE=temp
+
+smoke1_sensor:
+    image: sensor
+    environment:
+        - SENSOR_NAME=smoke1
+        - SENSOR_TYPE=smoke
+
+smoke2_sensor:
+    image: sensor
+    environment:
+        - SENSOR_NAME=smoke2
+        - SENSOR_TYPE=smoke

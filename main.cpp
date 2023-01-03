@@ -4,6 +4,7 @@
 #include <sstream>
 #include <iomanip>
 #include <unistd.h>
+#include <chrono>
 
 #include "mqtt/client.h"
 
@@ -23,7 +24,10 @@ std::normal_distribution<float>* distribution;
 std::string generate_uuid_v4() {
 	std::uniform_int_distribution<> dis(0, 15);
 	std::uniform_int_distribution<> dis2(8, 11);
-    std::default_random_engine generator( (unsigned int)time(0) );
+    std::chrono::milliseconds ms = std::chrono::duration_cast<std::chrono::milliseconds>(
+            std::chrono::system_clock::now().time_since_epoch()
+    );
+    std::default_random_engine generator(static_cast<uint64_t>(ms.count()));
 
 	std::stringstream ss;
 	int i;
