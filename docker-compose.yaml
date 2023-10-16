@@ -1,35 +1,46 @@
-air1_sensor:
-    image: sensor
-    environment:
-        - SENSOR_NAME=air1
-        - SENSOR_TYPE=oxygen
+version: "3.8"
+services:
 
-air2_sensor:
-    image: sensor
-    environment:
-        - SENSOR_NAME=air2
-        - SENSOR_TYPE=oxygen
+    sensor1:
+        build: .
+        environment:
+            - SENSOR_NAME=sensor1
 
-temp1_sensor:
-    image: sensor
-    environment:
-        - SENSOR_NAME=temp1
-        - SENSOR_TYPE=temp
+    sensor2:
+        depends_on:
+            - sensor1
+        build: .
+        environment:
+            - SENSOR_NAME=sensor2
 
-temp2_sensor:
-    image: sensor
-    environment:
-        - SENSOR_NAME=temp2
-        - SENSOR_TYPE=temp
 
-smoke1_sensor:
-    image: sensor
-    environment:
-        - SENSOR_NAME=smoke1
-        - SENSOR_TYPE=smoke
+    sensor3:
+        depends_on:
+            - sensor2
+        build: .
+        environment:
+            - SENSOR_NAME=sensor3
 
-smoke2_sensor:
-    image: sensor
-    environment:
-        - SENSOR_NAME=smoke2
-        - SENSOR_TYPE=smoke
+
+    sensor4:
+        depends_on:
+            - sensor3
+        build: .
+        environment:
+            - SENSOR_NAME=sensor4
+
+
+    sensor5:
+        depends_on:
+            - sensor4
+        build: .
+        environment:
+            - SENSOR_NAME=sensor5
+
+
+    sensor6:
+        depends_on:
+            - sensor5
+        build: .
+        environment:
+            - SENSOR_NAME=sensor6
